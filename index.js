@@ -9,6 +9,6 @@ app.use(bodyParser.json());
 
 app.use("/", userRoutes);
 
-app.listen(8080, () => {
+app.listen(8686, () => {
   console.log("Server Running");
 });

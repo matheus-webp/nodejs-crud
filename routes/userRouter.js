@@ -7,3 +7,4 @@ export default router;
 router.get("/", UserController.index);
 router.post('/user', UserController.create)
 router.delete('/user', UserController.delete)
+router.patch('/user/:username', UserController.update)

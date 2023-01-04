@@ -2,12 +2,14 @@ import knex from '../database/db.js'
 import bcrypt from 'bcrypt'
 
 class User {
+
     async findByUsername(username){
-        const response = await knex.select().where({username}).table('users')
-        if(response === []){
-            return false
+        const response =  await knex.select().where({username}).table('users')
+
+        if(response.length > 0){
+            return response[0]
         }
-        return response[0]
+        return false
     }
 
 
@@ -16,7 +18,7 @@ class User {
         const hashedPassword = await bcrypt.hash(password, 10)
         await knex.insert({username, name, password: hashedPassword, email}).table('users')
     }
-
+    
     async remove(username, password){
         const userFound = await this.findByUsername(username)
         if(!userFound){
@@ -31,6 +33,11 @@ class User {
      
     }
 
+    async overwrite(username, newUsername, name){
+        await knex.update({username: newUsername, name}).where({username}).table('users')
+    }
+
+ 
 
 
 

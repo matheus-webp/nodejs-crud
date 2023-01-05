@@ -1,11 +1,30 @@
 import knex from '../database/db.js'
 import bcrypt from 'bcrypt'
 
+
 class User {
 
     async findByUsername(username){
         const response =  await knex.select().where({username}).table('users')
+     
+        if(response.length > 0){
+            return response[0]
+        }
+        return false
+    }
 
+    async findByEmail(email){
+        const response =  await knex.select().where({email}).table('users')
+     
+        if(response.length > 0){
+            return response[0]
+        }
+        return false
+    }
+
+    async findById(id){
+        const response =  await knex.select().where({id}).table('users')
+     
         if(response.length > 0){
             return response[0]
         }
@@ -35,6 +54,11 @@ class User {
 
     async overwrite(username, newUsername, name){
         await knex.update({username: newUsername, name}).where({username}).table('users')
+    }
+
+    async changePassword(id, newPassword){
+        const userFound = await this.findById(id)
+        await knex.update({password: newPassword}).where({id}).table('users')
     }
 
  

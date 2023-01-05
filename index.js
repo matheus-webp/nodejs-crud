@@ -1,6 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/userRouter.js";
+
+
 const app = express();
 
 // body-parser default config

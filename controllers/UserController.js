@@ -1,6 +1,5 @@
-import express from "express";
 import User from '../models/User.js'
-
+import Recover from '../models/Recover.js';
 
 class UserController {
 
@@ -10,7 +9,7 @@ class UserController {
   }
 
   create(req, res){
-    const createAsync = async () => {
+      const createAsync = async () => {
       const {username, name, password, email} = req.body
       const userAlreadyExists = await User.findByUsername(username)
   
@@ -46,7 +45,7 @@ class UserController {
   }
 
  update(req, res){
- const updateAsync = async () => {
+    const updateAsync = async () => {
     const {username} = req.params
     const {newUsername, name} = req.body
     const usernameAlreadyExists = await User.findByUsername(newUsername)
@@ -65,22 +64,35 @@ class UserController {
    updateAsync()
  }
 
+recover(req, res){
+  const recoverAsync = async () => {
+    const {email} = req.body
+    const userExists = await User.findByEmail(email)
+    if(!userExists){
+      res.status(400)
+      res.send('User not found')
+      return
+    }
+  await Recover.generateToken(userExists.id, userExists.email)
+  res.send('Email sent!')
 
 
+  }
+  recoverAsync()
+}
 
+change(req, res){
+  const changeAsync = async () => {
+    const {id} = req.params
+    const {newPassword} = req.body
+    await User.changePassword(id, newPassword)
+    res.send('Password changed!')
 
+  }
+  
+changeAsync()
 
-
-
-
-
-
-
-
-
-
-
-
+}
 
 }
 

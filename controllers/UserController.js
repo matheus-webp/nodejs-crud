@@ -1,5 +1,7 @@
 import User from '../models/User.js'
 import Recover from '../models/Recover.js';
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 class UserController {
 
@@ -73,8 +75,8 @@ recover(req, res){
       res.send('User not found')
       return
     }
-  const generatedToken = await Recover.generateToken(userExists.id, userExists.email)
-  res.send(`${generatedToken}`)
+  await Recover.generateToken(userExists.id, userExists.email)
+  res.send('Recover password link has been sent')
 
 
 
@@ -94,6 +96,36 @@ changeAsync()
 res.send('Password Changed!')
 
 }
+
+login(req, res){
+  const loginAsync = async () => {
+    const {loginField,password} = req.body
+    const isValidLogin = await User.isUserValid(loginField)
+    
+    if(!isValidLogin){
+      res.status(400)
+      res.send('Invalid/Incorrect Login or Password!')
+      return
+    }
+    const isValidData = await bcrypt.compare(password, isValidLogin.password)
+    if(!isValidData){ 
+      res.status(400)
+      res.send('Invalid/Incorrect Login or Password!')
+      return
+    }
+
+  
+    const acessToken = await jwt.sign({email: isValidLogin.email}, process.env.JWT_SECRET, {expiresIn: '72h'})
+    res.send(`${acessToken}`)
+   
+   
+  
+  }
+  loginAsync()
+
+}
+
+
 
 }
 

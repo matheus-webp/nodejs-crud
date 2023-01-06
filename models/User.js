@@ -61,6 +61,21 @@ class User {
         await knex.update({password: hashedPassword}).where({id}).table('users')
     }
 
+    async isUserValid(loginField){
+        const validUsername = await this.findByUsername(loginField)
+        const validEmail = await this.findByEmail(loginField)
+
+        if(!validUsername && !validEmail){
+            return false
+        }
+        if(!validUsername && validEmail){
+            return validEmail
+        }
+        if(validUsername && !validEmail){
+            return validUsername
+        }
+    }
+
  
 
 

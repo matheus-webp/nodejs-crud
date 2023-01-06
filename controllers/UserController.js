@@ -73,8 +73,9 @@ recover(req, res){
       res.send('User not found')
       return
     }
-  await Recover.generateToken(userExists.id, userExists.email)
-  res.send('Email sent!')
+  const generatedToken = await Recover.generateToken(userExists.id, userExists.email)
+  res.send(`${generatedToken}`)
+
 
 
   }
@@ -82,15 +83,15 @@ recover(req, res){
 }
 
 change(req, res){
+
   const changeAsync = async () => {
     const {id} = req.params
     const {newPassword} = req.body
     await User.changePassword(id, newPassword)
-    res.send('Password changed!')
-
   }
   
 changeAsync()
+res.send('Password Changed!')
 
 }
 

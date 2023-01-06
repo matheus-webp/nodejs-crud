@@ -57,8 +57,8 @@ class User {
     }
 
     async changePassword(id, newPassword){
-        const userFound = await this.findById(id)
-        await knex.update({password: newPassword}).where({id}).table('users')
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
+        await knex.update({password: hashedPassword}).where({id}).table('users')
     }
 
  
